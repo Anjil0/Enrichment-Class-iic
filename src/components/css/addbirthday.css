@@ -1,0 +1,23 @@
+.div{
+    margin: 10px;
+    font-size: larger;
+    color:rgba(0, 0, 0, 0.813);
+    font-weight: bold;
+}
+
+.btn{
+    margin: 10px 10px;
+    background-color: beige;
+    padding: 10px 20px;
+    border-radius: 12px;
+    color: blueviolet;
+    font-weight: bolder;
+    font-size: large;
+
+}
+
+.input, .textArea{
+    color:darkblue;
+    margin-left: 10px;
+    font-size: 17px;
+}
