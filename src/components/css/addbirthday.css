@@ -13,7 +13,11 @@
     color: blueviolet;
     font-weight: bolder;
     font-size: large;
+}
 
+.btn a{
+    color: blueviolet;
+    text-decoration: none;
 }
 
 .input, .textArea{
