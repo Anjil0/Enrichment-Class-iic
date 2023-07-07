@@ -1,5 +1,5 @@
 import "./css/addbirthday.css";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import React, { useState } from "react";
 
 const AddBirthday = () => {
@@ -7,7 +7,7 @@ const AddBirthday = () => {
     firstName: "",
     lastName: "",
     message: "",
-    birthDate: "2015-09-13",
+    birthDay: "",
     photo: "",
   });
 
@@ -23,15 +23,33 @@ const AddBirthday = () => {
     //Retrive existing form data from local storage
     const existingData = JSON.parse(localStorage.getItem("formData")) || [];
     console.log(JSON.parse(localStorage.getItem("formData")));
-    
+
     //Add new form data to the array
-    const newdata = [...existingData, ...formData];
+    const newdata = [...existingData, formData];
     console.log(JSON.stringify(newdata));
 
     //save updated data in a local Storage as JSON
     localStorage.setItem("formData", JSON.stringify(newdata));
     console.log(JSON.parse(localStorage.getItem("formData")));
+    // Reset form fields
+    setFormData({
+      firstName: "",
+      lastName: "",
+      birthDay: "",
+      message: "",
+      photo: "",
+    });
+  };
 
+  const handleFileChange = (e) => {
+    const File = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const photoURL = reader.result;
+      setFormData((prevData) => ({ ...prevData, photo: photoURL }));
+    };
+    reader.readAsDataURL(File);
   };
   const style = {
     textAlign: "center",
@@ -85,8 +103,8 @@ const AddBirthday = () => {
           <label>Birth Date:</label>
           <input
             className="input"
-            name="birthDate"
-            value={formData.birthDate}
+            name="birthDay"
+            value={formData.birthDay}
             onChange={handleInputChange}
             type="date"
           />
@@ -96,15 +114,15 @@ const AddBirthday = () => {
           <input
             className="input"
             name="photo"
-            value={formData.photo}
-            onChange={handleInputChange}
-            type="text"
-            aria-required
+            onChange={handleFileChange}
+            type="file"
+            accept="image/*"
           />
         </div>
         {/* <Link to="/All-birthday"> */}
         <button className="btn">
-          <Link to="/All-birthday">Add</Link>
+          Add
+          {/* <Link to="/All-birthday">Add</Link> */}
         </button>
         {/* </Link> */}
         <button className="btn" type="Clear">

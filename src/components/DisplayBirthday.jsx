@@ -1,5 +1,17 @@
-import React from "react";
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import "./css/All.css";
+
+const Addmore = () => {
+  return (
+    <>
+      <Link to="/add-birthday">
+        <button style={bottomdiv}>Add More</button>
+      </Link>
+    </>
+  );
+};
+
 
 const divperson = {
   alignItems: "center",
@@ -27,98 +39,80 @@ const topdiv = {
 };
 const bottomdiv = {
   padding: "20px",
-  fontSize: "30px"
-}
-const Addmore = () => {
+  fontSize: "30px",
+};
+
+const ViewSavedData = () => {
+  const [formDataList, setFormDataList] = useState([]);
+
+  useEffect(() => {
+    const savedData = localStorage.getItem("formData");
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      setFormDataList(parsedData);
+    }
+  }, []);
+
+  const handleDelete = (index) => {
+    const updatedFormDataList = formDataList.filter(
+      (formData, idx) => idx !== index
+    );
+  
+  setFormDataList(updatedFormDataList);
+    localStorage.setItem('formData', JSON.stringify(updatedFormDataList));
+  };
+
   return (
     <>
-      <Link to="/add-birthday">
-        <button style={bottomdiv} >Add More</button>
-      </Link>
+      <div style={topdiv}>
+        <Addmore /> 
+      </div>
+      {formDataList.length > 0 ? (
+        formDataList.map((formData, index) => (
+          <div key={index} style={divperson}>
+            {formData.photo && (
+              <img
+                src={formData.photo}
+                alt="Birthday celebrant"
+                style={imgstyle}
+              />
+            )}
+            <div style={detailsstyles}>
+              <p>Entry {index + 1}</p>
+              <h2 style={{ color: "brown" }}>
+                {formData.firstName} {formData.lastName}
+              </h2>
+              <p style={{ color: "brown", paddingTop: "5px" }}>
+                {formData.birthDay}
+              </p>
+              <p
+                style={{
+                  paddingTop: "5px",
+                  color: "#777",
+                  fontStyle: "italic",
+                  fontSize: "20px",
+                }}
+              >
+                {formData.message}
+              </p>
+              <button>Edit</button>
+              <button onClick={() => handleDelete(index)}>Delete</button>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p>No birthdays registered.</p>
+      )}
     </>
   );
 };
 
-const DisplayBirthday = () => {
+function DisplayBirthday() {
   return (
     <>
-      <div style={topdiv}>
-       <Addmore/>
-      </div>
-      <div style={divperson}>
-        <img
-          style={imgstyle}
-          src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
-          alt="PIc"
-        />
-        <div style={detailsstyles}>
-          <h2 style={{ color: "brown" }}>John Doe</h2>
-          <p style={{ color: "brown", paddingTop: "5px" }}>DOB:- 12/12/2020</p>
-          <p style={{ color: "brown", paddingTop: "5px" }}>Age:- 21</p>
-          <p
-            style={{
-              paddingTop: "5px",
-              color: "#777",
-              fontStyle: "italic",
-              fontSize: "20px",
-            }}
-          >
-            Message: Happy Birthday Boss
-          </p>
-          <button>Edit</button>
-          <button>Delete</button>
-        </div>
-      </div>
-      <div style={divperson}>
-        <img
-          style={imgstyle}
-          src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
-          alt="PIc"
-        />
-        <div style={detailsstyles}>
-          <h2 style={{ color: "brown" }}>John Doe</h2>
-          <p style={{ color: "brown", paddingTop: "5px" }}>DOB:- 12/12/2020</p>
-          <p style={{ color: "brown", paddingTop: "5px" }}>Age:- 21</p>
-          <p
-            style={{
-              paddingTop: "5px",
-              color: "#777",
-              fontStyle: "italic",
-              fontSize: "20px",
-            }}
-          >
-            Message: Happy Birthday Boss
-          </p>
-          <button>Edit</button>
-          <button>Delete</button>
-        </div>
-      </div>
-      <div style={divperson}>
-        <img
-          style={imgstyle}
-          src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
-          alt="PIc"
-        />
-        <div style={detailsstyles}>
-          <h2 style={{ color: "brown" }}>John Doe</h2>
-          <p style={{ color: "brown", paddingTop: "5px" }}>DOB:- 12/12/2020</p>
-          <p style={{ color: "brown", paddingTop: "5px" }}>Age:- 21</p>
-          <p
-            style={{
-              paddingTop: "5px",
-              color: "#777",
-              fontStyle: "italic",
-              fontSize: "20px",
-            }}
-          >
-            Message: Happy Birthday Boss
-          </p>
-          <button>Edit</button>
-          <button>Delete</button>
-        </div>
-      </div>
+      <ViewSavedData />
     </>
   );
-};
+}
 
 export default DisplayBirthday;
