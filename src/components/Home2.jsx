@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Upcomming from "./Upcomming";
-// import "./css/All.css"
 
 const Home2 = () => {
   return (
@@ -67,6 +66,7 @@ const ViewSavedData = () => {
   const detailsstyles = {
     margin: '10px 0px 10px 20px',
 }
+
   return (
     <>
       <div style={styleswhole}>

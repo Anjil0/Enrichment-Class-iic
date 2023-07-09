@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./css/All.css";
+import "./css/addbirthday.css";
+
+const style = {
+  textAlign: "center",
+  margin: "21px auto",
+  padding: "10px 0px",
+  backgroundColor: "green",
+  color: "wheat",
+  borderRadius: "20px",
+  width: "100%",
+};
 
 const Addmore = () => {
   return (
@@ -12,7 +23,6 @@ const Addmore = () => {
   );
 };
 
-
 const divperson = {
   alignItems: "center",
   borderRadius: "10px",
@@ -21,6 +31,8 @@ const divperson = {
   width: "500px",
   border: "1px solid #ccc",
   display: "flex",
+  width: "60%",
+  padding: "2em",
 };
 
 const imgstyle = {
@@ -44,6 +56,14 @@ const bottomdiv = {
 
 const ViewSavedData = () => {
   const [formDataList, setFormDataList] = useState([]);
+  const [editedIndex, setEditedIndex] = useState(-1);
+  const [editedFormData, setEditedFormData] = useState({
+    firstName: "",
+    lastName: "",
+    birthDay: "",
+    message: "",
+    photo: "",
+  });
 
   useEffect(() => {
     const savedData = localStorage.getItem("formData");
@@ -57,15 +77,46 @@ const ViewSavedData = () => {
     const updatedFormDataList = formDataList.filter(
       (formData, idx) => idx !== index
     );
-  
-  setFormDataList(updatedFormDataList);
-    localStorage.setItem('formData', JSON.stringify(updatedFormDataList));
+
+    setFormDataList(updatedFormDataList);
+    localStorage.setItem("formData", JSON.stringify(updatedFormDataList));
   };
 
+  const handleEdit = (index) => {
+    const formData = formDataList[index];
+    setEditedIndex(index);
+    setEditedFormData(formData);
+  };
+
+  const handleInputchange = (e) => {
+    const { name, value } = e.target;
+    console.log(name, value);
+    setEditedFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSave = () => {
+    const updatedFormDataList = formDataList.map((formData, index) => {
+      if (index === editedIndex) {
+        return editedFormData;
+      }
+      return formData;
+    });
+
+    setFormDataList(updatedFormDataList);
+    localStorage.setItem("formData", JSON.stringify(updatedFormDataList));
+    setEditedIndex(-1);
+    setEditedFormData({
+      firstName: "",
+      lastName: "",
+      birthDay: "",
+      message: "",
+      photo: "",
+    });
+  };
   return (
     <>
       <div style={topdiv}>
-        <Addmore /> 
+        <Addmore />
       </div>
       {formDataList.length > 0 ? (
         formDataList.map((formData, index) => (
@@ -95,13 +146,81 @@ const ViewSavedData = () => {
               >
                 {formData.message}
               </p>
-              <button>Edit</button>
-              <button onClick={() => handleDelete(index)}>Delete</button>
             </div>
+            {index === editedIndex ? (
+              <div style={style}>
+                <div className="div">
+                  <label>First Name:</label>
+                  <input
+                    name="firstName"
+                    className="input"
+                    id="editedFirstName"
+                    type="text"
+                    placeholder="Firstname"
+                    value={editedFormData.firstName}
+                    onChange={handleInputchange}
+                    required
+                  />
+                </div>
+                <div className="div">
+                  <label>Last Name:</label>
+                  <input
+                    name="lastName"
+                    className="input"
+                    type="text"
+                    value={editedFormData.lastName}
+                    onChange={handleInputchange}
+                    placeholder="Lastname"
+                    required
+                  />
+                </div>
+                <div className="div">
+                  <label>Message:</label>
+                  <textarea
+                    name="message"
+                    className="textArea"
+                    cols="30"
+                    rows="5"
+                    value={editedFormData.message}
+                    onChange={handleInputchange}
+                  ></textarea>
+                </div>
+                <div className="div">
+                  <label>Birth Date:</label>
+                  <input
+                    className="input"
+                    name="birthDay"
+                    value={editedFormData.birthDay}
+                    onChange={handleInputchange}
+                    type="date"
+                  />
+                </div>
+                <div className="div">
+                  <label>Upload Photo:</label>
+                  <input
+                    className="input"
+                    name="photo"
+                    // onChange={handleFileChange}
+                    type="file"
+                    accept="image/*"
+                  />
+                </div>
+                {/* <Link to="/All-birthday"> */}
+                <button className="btn" onClick={handleSave}>
+                  Save
+                  {/* <Link to="/All-birthday">Add</Link> */}
+                </button>
+              </div>
+            ) : (
+              <div>
+                <button onClick={() => handleEdit(index)}>Edit</button>
+                <button onClick={() => handleDelete(index)}>Delete</button>
+              </div>
+            )}
           </div>
         ))
       ) : (
-        <p>No birthdays registered.</p>
+        <p>No data Found..</p>
       )}
     </>
   );
