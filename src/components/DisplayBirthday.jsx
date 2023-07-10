@@ -11,6 +11,7 @@ const style = {
   color: "wheat",
   borderRadius: "20px",
   width: "100%",
+  
 };
 
 const Addmore = () => {
@@ -28,7 +29,7 @@ const divperson = {
   borderRadius: "10px",
   backgroundColor: "#f4f4f4",
   margin: "10px auto",
-  width: "500px",
+  // width: "500px",
   border: "1px solid #ccc",
   display: "flex",
   width: "60%",
@@ -94,6 +95,17 @@ const ViewSavedData = () => {
     setEditedFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  const handleFileChange = (e) => {
+    const File = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const photoURL = reader.result;
+      setEditedFormData((prevData) => ({ ...prevData, photo: photoURL }));
+    };
+    reader.readAsDataURL(File);
+  };
+
   const handleSave = () => {
     const updatedFormDataList = formDataList.map((formData, index) => {
       if (index === editedIndex) {
@@ -102,6 +114,7 @@ const ViewSavedData = () => {
       return formData;
     });
 
+        
     setFormDataList(updatedFormDataList);
     localStorage.setItem("formData", JSON.stringify(updatedFormDataList));
     setEditedIndex(-1);
@@ -112,6 +125,7 @@ const ViewSavedData = () => {
       message: "",
       photo: "",
     });
+    
   };
   return (
     <>
@@ -200,7 +214,7 @@ const ViewSavedData = () => {
                   <input
                     className="input"
                     name="photo"
-                    // onChange={handleFileChange}
+                    onChange={handleFileChange}
                     type="file"
                     accept="image/*"
                   />
